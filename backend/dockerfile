@@ -1,0 +1,23 @@
+# Usa Python 3.9 Slim (Leve e estável)
+FROM python:3.9-slim
+
+# Configura Oracle Instant Client
+WORKDIR /opt/oracle
+COPY oracle_libs/ . 
+# Cria links simbólicos necessários
+RUN ln -s libclntsh.so.19.1 libclntsh.so || true
+ENV LD_LIBRARY_PATH=/opt/oracle:$LD_LIBRARY_PATH
+
+# Configura Aplicação Python
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia o código fonte
+COPY . .
+
+# Expõe a porta
+EXPOSE 5098
+
+# Comando de execução
+CMD ["python", "app.py"]

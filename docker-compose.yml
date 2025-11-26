@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: tasy_automacao_backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - ORACLE_CLIENT_LIB_DIR=/opt/oracle
+      - HEADLESS_MODE=True
+    volumes:
+      - ./logs:/app/logs
+
+  frontend:
+    build: ./frontend
+    container_name: tasy_automacao_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend

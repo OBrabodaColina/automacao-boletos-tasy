@@ -1,0 +1,93 @@
+/* Container principal */
+.auto-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Card */
+.auto-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.auto-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #1a1a1a;
+}
+
+/* Grid de status */
+.auto-status-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Item de status */
+.auto-status-item {
+  background: #f4f4f5;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  position: relative;
+  color: #444;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Item ativo */
+.auto-status-item.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Pontinho animado */
+.auto-dot {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  animation: pulse 0.8s infinite;
+}
+
+/* Animação */
+@keyframes pulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+
+/* Botão */
+.auto-button {
+  background: #2563eb;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  width: 100%;
+}
+
+.auto-button:hover {
+  background: #1e4fd3;
+}
