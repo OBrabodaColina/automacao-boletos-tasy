@@ -1,23 +1,53 @@
-# Usa Python 3.9 Slim (Leve e estável)
+# Usa Python 3.9 Slim
 FROM python:3.9-slim
 
-# Configura Oracle Instant Client
-WORKDIR /opt/oracle
-COPY oracle_libs/ . 
-# Cria links simbólicos necessários
-RUN ln -s libclntsh.so.19.1 libclntsh.so || true
-ENV LD_LIBRARY_PATH=/opt/oracle:$LD_LIBRARY_PATH
+# 1. Instala dependências do Sistema
+# libaio1 é obrigatória para o Oracle
+# unzip é necessário para descompactar o client
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    unzip \
+    libaio1 \
+    libnss3 \
+    libgconf-2-4 \
+    libfontconfig1 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    libgtk-3-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Configura Aplicação Python
+# 2. Instala o Google Chrome (Versão Estável)
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+# 3. Configuração do Oracle Instant Client (Thick Mode)
+WORKDIR /tmp
+
+COPY oracle_libs/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.el9.zip .
+
+RUN unzip instantclient-basiclite-linux.x64-21.12.0.0.0dbru.el9.zip -d /opt/oracle \
+    && rm instantclient-basiclite-linux.x64-21.12.0.0.0dbru.el9.zip
+
+
+ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_21_12:$LD_LIBRARY_PATH
+ENV ORACLE_HOME=/opt/oracle/instantclient_21_12
+
+# 4. Configuração da Aplicação Python
 WORKDIR /app
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia o código fonte
+# Copia todo o código fonte
 COPY . .
 
-# Expõe a porta
-EXPOSE 5098
+# Expõe a porta do Flask
+EXPOSE 5000
 
 # Comando de execução
 CMD ["python", "app.py"]
